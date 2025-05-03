@@ -13,7 +13,7 @@ public class Disk {
     public void render() {
         texture.bind();
         setMaterialVinyl();
-        drawDiskWithHole(0.5f, 0.05f, 0.0f, 0.1f);
+        drawDisk(0.5f, 0.0f, 0.1f);
     }
 
     private void setMaterialVinyl() {
@@ -29,26 +29,20 @@ public class Disk {
     }
 
 
-    private void drawDiskWithHole(float outerRadius, float innerRadius, float zStart, float zEnd) {
+    private void drawDisk(float outerRadius, float zStart, float zEnd) {
         int numSegments = 100;
         float angleStep = (float) (2.0f * Math.PI / numSegments);
+
         glBegin(GL_TRIANGLE_FAN);
         for (int i = 0; i <= numSegments; ++i) {
             float angle = i * angleStep;
             float x = outerRadius * (float) Math.cos(angle);
             float y = outerRadius * (float) Math.sin(angle);
             glTexCoord2f((x + 1) / 2, (y + 1) / 2);
+            glNormal3f(0.0f, 0.0f, 1.0f); // Normála pro horní stranu disku
             glVertex3f(x, y, zStart);
         }
         glEnd();
-        glBegin(GL_TRIANGLE_FAN);
-        for (int i = 0; i <= numSegments; ++i) {
-            float angle = i * angleStep;
-            float x = innerRadius * (float) Math.cos(angle);
-            float y = innerRadius * (float) Math.sin(angle);
-            glTexCoord2f((x + 1) / 2, (y + 1) / 2);
-            glVertex3f(x, y, zEnd);
-        }
-        glEnd();
     }
+
 }

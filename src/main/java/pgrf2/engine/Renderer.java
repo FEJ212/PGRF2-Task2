@@ -78,7 +78,6 @@ public class Renderer extends AbstractRenderer {
         super.init();
         speed = 0.f;
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
         camera = new Camera();
         camera.setCentre(new Vec3D(0, 0.5, 0.5)); // Nastavení středu kamery na gramofon
         camera.setRadius(5.0); // Nastavení konstantní vzdálenosti od gramofonu
@@ -88,6 +87,7 @@ public class Renderer extends AbstractRenderer {
         glEnable(GL_LIGHTING); // Povolení osvětlení
         glEnable(GL_LIGHT0);
         glEnable(GL_COLOR_MATERIAL); // Povolení materiálů
+        glEnable(GL_NORMALIZE); // Povolení automatického normalizování normálů
         glColor3f(1.0f, 1.0f, 1.0f); // Nastavení výchozí barvy na bílou
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
@@ -102,9 +102,7 @@ public class Renderer extends AbstractRenderer {
         }
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-
         gramophoneScene = new GramophoneScene(new GramophoneBase(textureBase), new Disk(textureDisk), new Leg(textureLeg), new Knob(textureKnob, textureDetail));
-
         ambientLight = new AmbientLight(0.6f, 0.6f, 0.6f); // Zvýšená intenzita ambientního osvětlení
         directionalLight = new DirectionalLight(new Vec3D(0, 0, -1), 1.0f, 1.0f, 1.0f); // Směrové světlo
     }
@@ -113,20 +111,17 @@ public class Renderer extends AbstractRenderer {
     public void display() {
         glViewport(0, 0, width, height);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Přidáno vymazání obrazovky
-
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         gluPerspective(45, width / (float) height, 0.1f, 200.0f);
-
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         camera.setMatrix(); // Nastavení kamery
-
         ambientLight.apply();
         directionalLight.apply(GL_LIGHT0);
-
         glPushMatrix();
         gramophoneScene.render();
         glPopMatrix();
     }
+
 }

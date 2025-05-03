@@ -26,7 +26,7 @@ public class GramophoneScene {
         glPushMatrix();
         glScalef(1.5f, 1.5f, 1.5f);
         glTranslatef(0.4f, 0.7f, 0.4f); // Posun disku na vrchní stranu gramofonu
-        glRotatef(90, 1, 0, 0); // Otočení disku pro správnou orientaci
+        glRotatef(270, 1, 0, 0); // Otočení disku pro správnou orientaci
         disk.render();
         glPopMatrix();
 

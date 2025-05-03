@@ -14,17 +14,17 @@ public class Knob {
     public void render() {
         mainTexture.bind();
         setMaterial();
-        generateKnob(0.1f, 0.09f, 0.1f, 0.02f);
-        drawTopCircle(0.1f, 0.1f); // Draw the top circle to close the knob
+        generateKnob(0.1f, 0.09f, 0.1f); // vykreslení stran
+        drawTopCircle(0.1f, 0.1f); // vykreslení vrchní strany
         detailTexture.bind();
-        drawWhiteLine(0.01f, 0.1f, 0.02f); // Draw the white line indicator
+        drawWhiteLine(0.0f, 0.0f, 0.1f, 0.01f, 0.02f); // vykreslení bílého indikátoru
     }
 
     private void setMaterial() {
-        float[] materialAmbient = {0.1f, 0.1f, 0.1f, 1.0f};
-        float[] materialDiffuse = {0.3f, 0.3f, 0.3f, 1.0f};
-        float[] materialSpecular = {0.6f, 0.6f, 0.6f, 1.0f};
-        float materialShininess = 50.f;
+        float[] materialAmbient = {0.2f, 0.2f, 0.2f, 1.0f}; // Trochu vyšší ambientní složka
+        float[] materialDiffuse = {0.4f, 0.4f, 0.4f, 1.0f}; // Vyšší difuzní složka
+        float[] materialSpecular = {0.1f, 0.1f, 0.1f, 1.0f}; // Nízká speculární složka pro matný vzhled
+        float materialShininess = 10.0f; // Nízký lesk
 
         glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialAmbient);
         glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialDiffuse);
@@ -32,11 +32,10 @@ public class Knob {
         glMateriali(GL_FRONT_AND_BACK, GL_SHININESS, (int) materialShininess);
     }
 
-    private void generateKnob(float bottomRadius, float topRadius, float height, float notchDepth) {
+    private void generateKnob(float bottomRadius, float topRadius, float height) {
         int slices = 32;
         float angleStep = (float) (Math.PI * 2 / slices);
 
-        // Generate the side of the knob with ridges
         glBegin(GL_QUAD_STRIP);
         for (int i = 0; i <= slices; i++) {
             float angle = i * angleStep;
@@ -46,12 +45,16 @@ public class Knob {
             float xTop = topRadius * (float) Math.cos(angle);
             float yTop = topRadius * (float) Math.sin(angle);
 
+            glNormal3f(xBottom, yBottom, 0); // Normála pro spodní část
             glVertex3f(xBottom, yBottom, 0);
+            glNormal3f(xTop, yTop, 0); // Normála pro horní část
             glVertex3f(xTop, yTop, height);
 
-            // Add ridges
+            // Přidání výstupků
             if (i % 2 == 0) {
+                glNormal3f(xBottom * 1.1f, yBottom * 1.1f, 0); // Normála pro spodní část výstupku
                 glVertex3f(xBottom * 1.1f, yBottom * 1.1f, 0);
+                glNormal3f(xTop * 1.1f, yTop * 1.1f, 0); // Normála pro horní část výstupku
                 glVertex3f(xTop * 1.1f, yTop * 1.1f, height);
             }
         }
@@ -63,6 +66,7 @@ public class Knob {
         float angleStep = (float) (Math.PI * 2 / slices);
 
         glBegin(GL_TRIANGLE_FAN);
+        glNormal3f(0, 0, 1); // Normála pro vrchní stranu
         glVertex3f(0, 0, height);
         for (int i = 0; i <= slices; i++) {
             float angle = i * angleStep;
@@ -75,35 +79,39 @@ public class Knob {
         glEnd();
     }
 
-    private void drawWhiteLine(float width, float height, float depth) {
-        float length = 0.1f; // Délka od středu k okraji
-        float offset = 0.01f; // Posunutí kvádru nad vršek drawTopCircle
+    private void drawWhiteLine(float centerX, float centerY, float radius, float height, float depth) {
+        float length = radius; // Délka od středu k okraji
+        float width = radius * 0.1f; // Šířka kvádru jako 10% radiusu
 
         glBegin(GL_QUADS);
 
         // Dolní strana kvádru
-        glVertex3f(-width / 2, 0, 0.1f - depth + offset); // Levý dolní roh
-        glVertex3f(width / 2, 0, 0.1f - depth + offset);  // Pravý dolní roh
-        glVertex3f(width / 2, length, 0.1f - depth + offset); // Pravý horní roh
-        glVertex3f(-width / 2, length, 0.1f - depth + offset); // Levý horní roh
+        glNormal3f(0, 0, -1); // Normála pro dolní stranu
+        glVertex3f(centerX - width / 2, centerY, 0.1f - depth + height); // Levý dolní roh
+        glVertex3f(centerX + width / 2, centerY, 0.1f - depth + height);  // Pravý dolní roh
+        glVertex3f(centerX + width / 2, centerY + length, 0.1f - depth + height); // Pravý horní roh
+        glVertex3f(centerX - width / 2, centerY + length, 0.1f - depth + height); // Levý horní roh
 
         // Horní strana kvádru
-        glVertex3f(-width / 2, 0, 0.1f + offset); // Levý dolní roh
-        glVertex3f(width / 2, 0, 0.1f + offset);  // Pravý dolní roh
-        glVertex3f(width / 2, length, 0.1f + offset); // Pravý horní roh
-        glVertex3f(-width / 2, length, 0.1f + offset); // Levý horní roh
+        glNormal3f(0, 0, 1); // Normála pro horní stranu
+        glVertex3f(centerX - width / 2, centerY, 0.1f + height); // Levý dolní roh
+        glVertex3f(centerX + width / 2, centerY, 0.1f + height);  // Pravý dolní roh
+        glVertex3f(centerX + width / 2, centerY + length, 0.1f + height); // Pravý horní roh
+        glVertex3f(centerX - width / 2, centerY + length, 0.1f + height); // Levý horní roh
 
         // Levá strana kvádru
-        glVertex3f(-width / 2, 0, 0.1f - depth + offset); // Levý dolní roh
-        glVertex3f(-width / 2, 0, 0.1f + offset); // Levý dolní roh
-        glVertex3f(-width / 2, length, 0.1f + offset); // Levý horní roh
-        glVertex3f(-width / 2, length, 0.1f - depth + offset); // Levý horní roh
+        glNormal3f(-1, 0, 0); // Normála pro levou stranu
+        glVertex3f(centerX - width / 2, centerY, 0.1f - depth + height); // Levý dolní roh
+        glVertex3f(centerX - width / 2, centerY, 0.1f + height); // Levý dolní roh
+        glVertex3f(centerX - width / 2, centerY + length, 0.1f + height); // Levý horní roh
+        glVertex3f(centerX - width / 2, centerY + length, 0.1f - depth + height); // Levý horní roh
 
         // Pravá strana kvádru
-        glVertex3f(width / 2, 0, 0.1f - depth + offset); // Pravý dolní roh
-        glVertex3f(width / 2, 0, 0.1f + offset); // Pravý dolní roh
-        glVertex3f(width / 2, length, 0.1f + offset); // Pravý horní roh
-        glVertex3f(width / 2, length, 0.1f - depth + offset); // Pravý horní roh
+        glNormal3f(1, 0, 0); // Normála pro pravou stranu
+        glVertex3f(centerX + width / 2, centerY, 0.1f - depth + height); // Pravý dolní roh
+        glVertex3f(centerX + width / 2, centerY, 0.1f + height); // Pravý dolní roh
+        glVertex3f(centerX + width / 2, centerY + length, 0.1f + height); // Pravý horní roh
+        glVertex3f(centerX + width / 2, centerY + length, 0.1f - depth + height); // Pravý horní roh
 
         glEnd();
     }
