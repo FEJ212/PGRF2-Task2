@@ -39,9 +39,12 @@ public class Leg {
             float yTop = topRadius * (float) Math.sin(angle);
             float xBottom = bottomRadius * (float) Math.cos(angle);
             float yBottom = bottomRadius * (float) Math.sin(angle);
+            float texCoordX = (float) i / numSegments;
             glNormal3f(xTop, yTop, 0); // Normála pro horní část
+            glTexCoord2f(texCoordX, 1.0f); // Souřadnice textury pro horní část
             glVertex3f(xTop, yTop, height);
             glNormal3f(xBottom, yBottom, 0); // Normála pro spodní část
+            glTexCoord2f(texCoordX, 0.0f); // Souřadnice textury pro spodní část
             glVertex3f(xBottom, yBottom, 0.0f);
         }
         glEnd();
@@ -52,11 +55,13 @@ public class Leg {
         float angleStep = (float) (2.0f * Math.PI / numSegments);
         glBegin(GL_TRIANGLE_FAN);
         glNormal3f(0, 0, -1); // Normála pro spodní stranu
+        glTexCoord2f(0.5f, 0.5f); // Souřadnice textury pro střed kruhu
         glVertex3f(0.0f, 0.0f, 0.0f); // střed kruhu
         for (int i = 0; i <= numSegments; ++i) {
             float angle = i * angleStep;
             float x = radius * (float) Math.cos(angle);
             float y = radius * (float) Math.sin(angle);
+            glTexCoord2f((x / radius + 1) / 2, (y / radius + 1) / 2); // Souřadnice textury pro okraj kruhu
             glVertex3f(x, y, 0.0f);
         }
         glEnd();
