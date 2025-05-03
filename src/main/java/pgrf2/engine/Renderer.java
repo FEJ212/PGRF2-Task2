@@ -102,7 +102,7 @@ public class Renderer extends AbstractRenderer {
         }
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-        gramophoneScene = new GramophoneScene(new GramophoneBase(textureBase), new Disk(textureDisk), new Leg(textureLeg), new Knob(textureKnob, textureDetail));
+        gramophoneScene = new GramophoneScene(new GramophoneBase(textureBase, textureDetail), new Disk(textureDisk), new Leg(textureLeg), new Knob(textureKnob, textureDetail));
         ambientLight = new AmbientLight(0.6f, 0.6f, 0.6f); // Zvýšená intenzita ambientního osvětlení
         directionalLight = new DirectionalLight(new Vec3D(0, 0, -1), 1.0f, 1.0f, 1.0f); // Směrové světlo
     }
