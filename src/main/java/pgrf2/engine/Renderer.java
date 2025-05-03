@@ -11,7 +11,6 @@ import pgrf2.models.Leg;
 import pgrf2.transforms.Vec3D;
 
 import static org.lwjgl.opengl.GL11.*;
-import static pgrf2.engine.utils.GluUtils.gluLookAt;
 import static pgrf2.engine.utils.GluUtils.gluPerspective;
 
 public class Renderer extends AbstractRenderer {
@@ -20,6 +19,7 @@ public class Renderer extends AbstractRenderer {
     private GramophoneScene gramophoneScene;
     private SkyBox skyBox;
     private int angle;
+    private float speed;
     private double lastX, lastY;
     private AmbientLight ambientLight;
     private DirectionalLight directionalLight;
@@ -75,6 +75,7 @@ public class Renderer extends AbstractRenderer {
     @Override
     public void init() {
         super.init();
+        speed = 0.f;
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         camera = new Camera();
@@ -84,8 +85,8 @@ public class Renderer extends AbstractRenderer {
         glEnable(GL_TEXTURE_2D); // Povolení textur
         glDisable(GL_CULL_FACE);
         glEnable(GL_LIGHTING); // Povolení osvětlení
-        glEnable(GL_LIGHT0); // Povolení prvního světla
-        glEnable(GL_COLOR_MATERIAL); // Povolení GL_COLOR_MATERIAL
+        glEnable(GL_LIGHT0);
+        glEnable(GL_COLOR_MATERIAL); // Povolení materiálů
         glColor3f(1.0f, 1.0f, 1.0f); // Nastavení výchozí barvy na bílou
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();

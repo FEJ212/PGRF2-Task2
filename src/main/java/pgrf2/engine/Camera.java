@@ -30,30 +30,8 @@ public class Camera {
         valid = false;
     }
 
-    public Camera(Camera camera) {
-        azimuth = camera.getAzimuth();
-        zenith = camera.getZenith();
-        radius = camera.getRadius();
-        centre = new Vec3D(camera.getCentre());
-        valid = false;
-    }
-
     public void addAzimuth(double ang) {
         azimuth += ang * 5;
-        valid = false;
-    }
-
-    public void addRadius(double dist) {
-        if (radius + dist < 0.1f)
-            return;
-        radius += dist;
-        valid = false;
-    }
-
-    public void mulRadius(double scale) {
-        if (radius * scale < 0.1f)
-            return;
-        radius *= scale;
         valid = false;
     }
 

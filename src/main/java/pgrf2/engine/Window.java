@@ -135,16 +135,6 @@ public class Window {
                     delegate.free();
                 }
             });
-        //TODO
-		/*other debug modes, some may have a very negative impact on performance
-		 * see https://github.com/LWJGL/lwjgl3-wiki/wiki/2.5.-Troubleshooting
-
-		Configuration.DEBUG.set(true);
-		Configuration.DEBUG_LOADER.set(true);
-		Configuration.DEBUG_MEMORY_ALLOCATOR.set(true);
-		Configuration.DEBUG_STACK.set(true);
-		Configuration.DEBUG_STREAM.set(true);
-		*/
 
         // Get the thread stack and push a new frame
         try (MemoryStack stack = stackPush()) {

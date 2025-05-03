@@ -29,10 +29,4 @@ public class DirectionalLight {
     public void setPosition(Vec3D position) {
         this.position = position;
     }
-
-    public void setIntensity(float intensity) {
-        color[0] *= intensity;
-        color[1] *= intensity;
-        color[2] *= intensity;
-    }
 }
