@@ -21,6 +21,8 @@ public class Renderer extends AbstractRenderer {
     private SkyBox skyBox;
     private int angle;
     private double lastX, lastY;
+    private AmbientLight ambientLight;
+    private DirectionalLight directionalLight;
 
     public Renderer() {
         super();
@@ -31,6 +33,7 @@ public class Renderer extends AbstractRenderer {
                 if (w > 0 && h > 0) {
                     width = w;
                     height = h;
+                    glViewport(0, 0, width, height);
                 }
             }
         };
@@ -56,6 +59,15 @@ public class Renderer extends AbstractRenderer {
 
                 camera.addAzimuth(Math.toRadians(deltaX * 0.1));
                 camera.addZenith(Math.toRadians(-deltaY * 0.1));
+
+                // Aktualizace směru a pozice světla podle kamery
+                Vec3D lightDirection = new Vec3D(
+                        Math.sin(camera.getAzimuth()) * Math.cos(camera.getZenith()),
+                        Math.sin(camera.getZenith()),
+                        -(Math.cos(camera.getAzimuth()) * Math.cos(camera.getZenith()))
+                );
+                directionalLight.setDirection(lightDirection);
+                directionalLight.setPosition(camera.getPosition());
             }
         };
     }
@@ -71,6 +83,10 @@ public class Renderer extends AbstractRenderer {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_TEXTURE_2D); // Povolení textur
         glDisable(GL_CULL_FACE);
+        glEnable(GL_LIGHTING); // Povolení osvětlení
+        glEnable(GL_LIGHT0); // Povolení prvního světla
+        glEnable(GL_COLOR_MATERIAL); // Povolení GL_COLOR_MATERIAL
+        glColor3f(1.0f, 1.0f, 1.0f); // Nastavení výchozí barvy na bílou
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         try {
@@ -85,7 +101,10 @@ public class Renderer extends AbstractRenderer {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
 
-        gramophoneScene = new GramophoneScene(new GramophoneBase(textureBase, textureDetail), new Disk(textureDisk), new Leg(textureLeg), new Knob(textureKnob));
+        gramophoneScene = new GramophoneScene(new GramophoneBase(textureBase), new Disk(textureDisk), new Leg(textureLeg), new Knob(textureKnob));
+
+        ambientLight = new AmbientLight(0.6f, 0.6f, 0.6f); // Zvýšená intenzita ambientního osvětlení
+        directionalLight = new DirectionalLight(new Vec3D(0, 0, -1), 1.0f, 1.0f, 1.0f); // Směrové světlo
     }
 
     @Override
@@ -100,6 +119,9 @@ public class Renderer extends AbstractRenderer {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         camera.setMatrix(); // Nastavení kamery
+
+        ambientLight.apply();
+        directionalLight.apply(GL_LIGHT0);
 
         glPushMatrix();
         gramophoneScene.render();

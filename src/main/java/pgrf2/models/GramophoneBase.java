@@ -4,20 +4,31 @@ import static org.lwjgl.opengl.GL33.*;
 import pgrf2.lwjglutils.OGLTexture2D;
 
 public class GramophoneBase {
-    private final OGLTexture2D texture; //Textura dřeva na většinu báze
-    private final OGLTexture2D detailTexture; //Kovová textura pro detaily
-    //konstruktor
-    public GramophoneBase(OGLTexture2D texture, OGLTexture2D detailTexture) {
+    private final OGLTexture2D texture; // Textura dřeva na většinu báze
+
+    public GramophoneBase(OGLTexture2D texture) {
         this.texture = texture;
-        this.detailTexture = detailTexture;
     }
-    //renderovací metoda
+
     public void render() {
+        texture.bind();
+        setMaterialWood();
         generateGramophoneBase();
     }
-    //vykreslení objektu pomocí vertexů
+
+    private void setMaterialWood() {
+        float[] materialAmbient = {0.2f, 0.1f, 0.05f, 1.0f};
+        float[] materialDiffuse = {0.6f, 0.3f, 0.1f, 1.0f};
+        float[] materialSpecular = {0.2f, 0.2f, 0.2f, 1.0f};
+        float materialShininess = 30.0f;
+
+        glMaterialfv(GL_FRONT, GL_AMBIENT, materialAmbient);
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, materialDiffuse);
+        glMaterialfv(GL_FRONT, GL_SPECULAR, materialSpecular);
+        glMaterialf(GL_FRONT, GL_SHININESS, materialShininess);
+    }
+
     private void generateGramophoneBase() {
-        texture.bind();
         glBegin(GL_TRIANGLE_FAN);
         glVertex3f(-1, 0.2f, 0);
         glVertex3f(1, 0.2f, 0);
@@ -28,8 +39,6 @@ public class GramophoneBase {
         glVertex3f(1, 1, 0);
         glVertex3f(1, 0.2f, 0);
         glEnd();
-
-        texture.bind();
         glBegin(GL_TRIANGLE_FAN);
         glVertex3f(1, 1, 1);
         glVertex3f(1, 0.2f, 1);
@@ -39,30 +48,6 @@ public class GramophoneBase {
         glVertex3f(1, 1, 0);
         glVertex3f(1, 0.2f, 0);
         glVertex3f(1, 0.2f, 1);
-        glEnd();
-
-        // Přidání jemných detailů
-        detailTexture.bind();
-        glBegin(GL_LINES);
-        // Horní hrana
-        glVertex3f(-1, 1, 0);
-        glVertex3f(1, 1, 0);
-        glVertex3f(1, 1, 1);
-        glVertex3f(-1, 1, 1);
-        // Spodní hrana
-        glVertex3f(-1, 0.2f, 0);
-        glVertex3f(1, 0.2f, 0);
-        glVertex3f(1, 0.2f, 1);
-        glVertex3f(-1, 0.2f, 1);
-        glEnd();
-
-        detailTexture.bind();
-        glBegin(GL_TRIANGLE_FAN);
-        // Přední strana s knoflíky
-        glVertex3f(1, 0.2f, 0);
-        glVertex3f(1, 0.2f, 0.2f);
-        glVertex3f(1, 0.4f, 0.2f);
-        glVertex3f(1, 0.4f, 0);
         glEnd();
     }
 }
