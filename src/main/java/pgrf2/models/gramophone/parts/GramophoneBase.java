@@ -1,4 +1,4 @@
-package pgrf2.models;
+package pgrf2.models.gramophone.parts;
 
 import static org.lwjgl.opengl.GL33.*;
 import pgrf2.lwjglutils.OGLTexture2D;

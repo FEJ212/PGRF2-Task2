@@ -4,10 +4,11 @@ import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import pgrf2.lwjglutils.OGLTexture2D;
-import pgrf2.models.Knob;
-import pgrf2.models.Disk;
-import pgrf2.models.GramophoneBase;
-import pgrf2.models.Leg;
+import pgrf2.models.gramophone.parts.Knob;
+import pgrf2.models.gramophone.parts.Disk;
+import pgrf2.models.gramophone.parts.GramophoneBase;
+import pgrf2.models.gramophone.parts.Leg;
+import pgrf2.models.gramophone.GramophoneScene;
 import pgrf2.transforms.Vec3D;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -102,7 +103,7 @@ public class Renderer extends AbstractRenderer {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
 
-        gramophoneScene = new GramophoneScene(new GramophoneBase(textureBase), new Disk(textureDisk), new Leg(textureLeg), new Knob(textureKnob));
+        gramophoneScene = new GramophoneScene(new GramophoneBase(textureBase), new Disk(textureDisk), new Leg(textureLeg), new Knob(textureKnob, textureDetail));
 
         ambientLight = new AmbientLight(0.6f, 0.6f, 0.6f); // Zvýšená intenzita ambientního osvětlení
         directionalLight = new DirectionalLight(new Vec3D(0, 0, -1), 1.0f, 1.0f, 1.0f); // Směrové světlo

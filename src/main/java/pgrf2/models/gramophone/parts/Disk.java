@@ -1,4 +1,4 @@
-package pgrf2.models;
+package pgrf2.models.gramophone.parts;
 
 import pgrf2.lwjglutils.OGLTexture2D;
 import static org.lwjgl.opengl.GL11.*;
@@ -19,14 +19,15 @@ public class Disk {
     private void setMaterialVinyl() {
         float[] materialAmbient = {0.05f, 0.05f, 0.05f, 1.0f};
         float[] materialDiffuse = {0.1f, 0.1f, 0.1f, 1.0f};
-        float[] materialSpecular = {0.5f, 0.5f, 0.5f, 1.0f};
-        float materialShininess = 100.0f;
+        float[] materialSpecular = {0.9f, 0.9f, 0.9f, 1.0f}; // Increased specular reflection
+        float materialShininess = 128.0f; // Higher shininess value for a more glossy effect
 
         glMaterialfv(GL_FRONT, GL_AMBIENT, materialAmbient);
         glMaterialfv(GL_FRONT, GL_DIFFUSE, materialDiffuse);
         glMaterialfv(GL_FRONT, GL_SPECULAR, materialSpecular);
         glMaterialf(GL_FRONT, GL_SHININESS, materialShininess);
     }
+
 
     private void drawDiskWithHole(float outerRadius, float innerRadius, float zStart, float zEnd) {
         int numSegments = 100;

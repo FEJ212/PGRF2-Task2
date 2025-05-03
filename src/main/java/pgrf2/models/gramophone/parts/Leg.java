@@ -1,4 +1,4 @@
-package pgrf2.models;
+package pgrf2.models.gramophone.parts;
 
 import pgrf2.lwjglutils.OGLTexture2D;
 import static org.lwjgl.opengl.GL11.*;
@@ -14,6 +14,7 @@ public class Leg {
         texture.bind();
         setMaterialRubber();
         drawLeg(0.05f, 0.0425f, 0.2f);
+        drawBottomCircle(0.0425f); // vykreslení spodku kruhu
     }
 
     private void setMaterialRubber() {
@@ -40,6 +41,20 @@ public class Leg {
             float yBottom = bottomRadius * (float) Math.sin(angle);
             glVertex3f(xTop, yTop, height);
             glVertex3f(xBottom, yBottom, 0.0f);
+        }
+        glEnd();
+    }
+
+    private void drawBottomCircle(float radius) {
+        int numSegments = 100;
+        float angleStep = (float) (2.0f * Math.PI / numSegments);
+        glBegin(GL_TRIANGLE_FAN);
+        glVertex3f(0.0f, 0.0f, 0.0f); // střed kruhu
+        for (int i = 0; i <= numSegments; ++i) {
+            float angle = i * angleStep;
+            float x = radius * (float) Math.cos(angle);
+            float y = radius * (float) Math.sin(angle);
+            glVertex3f(x, y, 0.0f);
         }
         glEnd();
     }
