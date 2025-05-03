@@ -11,8 +11,10 @@ import pgrf2.models.gramophone.parts.Leg;
 import pgrf2.models.gramophone.GramophoneScene;
 import pgrf2.transforms.Vec3D;
 
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static pgrf2.engine.utils.GluUtils.gluPerspective;
+import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
 
 public class Renderer extends AbstractRenderer {
     private OGLTexture2D textureBase, textureDisk, textureLeg, textureKnob, textureDetail;
@@ -88,6 +90,10 @@ public class Renderer extends AbstractRenderer {
         glEnable(GL_LIGHT0);
         glEnable(GL_COLOR_MATERIAL); // Povolení materiálů
         glEnable(GL_NORMALIZE); // Povolení automatického normalizování normálů
+
+        glfwWindowHint(GLFW_SAMPLES, 4); // Nastavení počtu vzorků na 4
+        glEnable(GL_MULTISAMPLE); // Povolení multisamplingu
+
         glColor3f(1.0f, 1.0f, 1.0f); // Nastavení výchozí barvy na bílou
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
