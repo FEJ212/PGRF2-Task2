@@ -8,6 +8,7 @@ import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
+import java.nio.DoubleBuffer;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -22,6 +23,7 @@ public class Window {
     // The window handle
     private long window;
     private AbstractRenderer renderer;
+    private UIPanel uiPanel;
 
     private static boolean DEBUG = false;
 
@@ -49,6 +51,7 @@ public class Window {
         DEBUG = debug;
         WIDTH = width;
         HEIGHT = height;
+        uiPanel = new UIPanel(width, 50); // Example height for the UI panel
         if (DEBUG)
             System.err.println("Run in debugging mode");
         run();
@@ -92,10 +95,30 @@ public class Window {
             throw new RuntimeException("Failed to create the GLFW window");
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(window, renderer.getGlfwKeyCallback());
+        glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
+            if (uiPanel.isMouseOver(glfwGetCursorPosX(window), glfwGetCursorPosY(window))) {
+                uiPanel.getKeyCallback().invoke(window, key, scancode, action, mods);
+            } else {
+                renderer.getGlfwKeyCallback().invoke(window, key, scancode, action, mods);
+            }
+        });
+
         glfwSetWindowSizeCallback(window, renderer.getGlfwWindowSizeCallback());
-        glfwSetMouseButtonCallback(window, renderer.getGlfwMouseButtonCallback());
-        glfwSetCursorPosCallback(window, renderer.getGlfwCursorPosCallback());
+        glfwSetMouseButtonCallback(window, (window, button, action, mods) -> {
+            if (uiPanel.isMouseOver(glfwGetCursorPosX(window), glfwGetCursorPosY(window))) {
+                uiPanel.getMouseButtonCallback().invoke(window, button, action, mods);
+            } else {
+                renderer.getGlfwMouseButtonCallback().invoke(window, button, action, mods);
+            }
+        });
+
+        glfwSetCursorPosCallback(window, (window, xpos, ypos) -> {
+            uiPanel.getCursorPosCallback().invoke(window, xpos, ypos);
+            if (!uiPanel.isMouseOver(xpos, ypos)) {
+                renderer.getGlfwCursorPosCallback().invoke(window, xpos, ypos);
+            }
+        });
+
         glfwSetScrollCallback(window, renderer.getGlfwScrollCallback());
 
         if (DEBUG)
@@ -107,7 +130,7 @@ public class Window {
                     if (error == GLFW_VERSION_UNAVAILABLE)
                         System.err.println("GLFW_VERSION_UNAVAILABLE: This demo requires OpenGL 2.0 or higher.");
                     if (error == GLFW_NOT_INITIALIZED)
-                        System.err.println();
+                        System.err.println("GLFW_NOT_INITIALIZED");
                     if (error == GLFW_NO_CURRENT_CONTEXT)
                         System.err.println("GLFW_NO_CURRENT_CONTEXT");
                     if (error == GLFW_INVALID_ENUM)
@@ -122,8 +145,6 @@ public class Window {
                         System.err.println("GLFW_VERSION_UNAVAILABLE");
                     if (error == GLFW_PLATFORM_ERROR)
                         System.err.println("GLFW_PLATFORM_ERROR");
-                    if (error == GLFW_FORMAT_UNAVAILABLE)
-                        System.err.println("GLFW_FORMAT_UNAVAILABLE");
                     if (error == GLFW_FORMAT_UNAVAILABLE)
                         System.err.println("GLFW_FORMAT_UNAVAILABLE");
 
@@ -162,13 +183,13 @@ public class Window {
 
         // Make the window visible
         glfwShowWindow(window);
+
+        // Initialize the UI panel
+        uiPanel.init();
     }
 
     private void loop() {
-        // This line is critical for LWJGL's interoperation with GLFW's
-        // OpenGL context, or any context that is managed externally.
-        // LWJGL detects the context that is current in the current thread,
-        // creates the GLCapabilities instance and makes the OpenGL
+        // This line is critical for LWJGL's interoperation with GLFW        // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
 
@@ -180,7 +201,10 @@ public class Window {
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
+            // Render the UI panel
+            uiPanel.render();
 
+            // Render the main content
             renderer.display();
 
             glfwSwapBuffers(window); // swap the color buffers
@@ -191,4 +215,21 @@ public class Window {
         }
     }
 
+    private double glfwGetCursorPosX(long window) {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            DoubleBuffer xpos = stack.mallocDouble(1);
+            DoubleBuffer ypos = stack.mallocDouble(1);
+            glfwGetCursorPos(window, xpos, ypos);
+            return xpos.get(0);
+        }
+    }
+
+    private double glfwGetCursorPosY(long window) {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            DoubleBuffer xpos = stack.mallocDouble(1);
+            DoubleBuffer ypos = stack.mallocDouble(1);
+            glfwGetCursorPos(window, xpos, ypos);
+            return ypos.get(0);
+        }
+    }
 }
