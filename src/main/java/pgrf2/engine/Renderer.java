@@ -22,7 +22,7 @@ public class Renderer extends AbstractRenderer {
     private GramophoneScene gramophoneScene;
     private SkyBox skyBox;
     private int angle;
-    private float speed;
+    private float speed, volume;
     private double lastX, lastY;
     private AmbientLight ambientLight;
     private DirectionalLight directionalLight;
@@ -78,7 +78,8 @@ public class Renderer extends AbstractRenderer {
     @Override
     public void init() {
         super.init();
-        speed = 0.f;
+        speed = 1.f;
+        volume = 1.f;
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         camera = new Camera();
         camera.setCentre(new Vec3D(0, 0.5, 0.5)); // Nastavení středu kamery na gramofon

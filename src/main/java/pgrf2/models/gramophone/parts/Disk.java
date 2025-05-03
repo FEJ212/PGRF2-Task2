@@ -13,7 +13,7 @@ public class Disk {
     public void render() {
         texture.bind();
         setMaterialVinyl();
-        drawDisk(0.5f, 0.0f, 0.1f);
+        drawDisk(0.5f, 0.0f);
     }
 
     private void setMaterialVinyl() {
@@ -29,7 +29,7 @@ public class Disk {
     }
 
 
-    private void drawDisk(float outerRadius, float zStart, float zEnd) {
+    private void drawDisk(float outerRadius, float zStart) {
         int numSegments = 100;
         float angleStep = (float) (2.0f * Math.PI / numSegments);
 
