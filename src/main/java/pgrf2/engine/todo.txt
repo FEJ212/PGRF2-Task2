@@ -1,5 +1,3 @@
-
-    //TODO: Skybox
     //TODO: Přehrávání hudby
     //TODO: Animace disku
     //TODO: Animace knoflíků
@@ -8,9 +6,10 @@
     //TODO: ovládání rychlosti přehrávání
     //TODO: ovládání hlasitosti
     //TODO: UI
-    //TODO: vlákna pro ovládání i po kliknutí na UI
     //TODO: nápověda v UI
     //TODO: výběr hudby z nabídky
     //TODO: nahrání vlastní hudby
     //TODO: vlastní obrázky k hudbě
-
+    //TODO: Předělat GramophoneBody
+    //TODO: Opravit normály GramophoneBody
+    //TODO: opravit skybox podlaha prohozená se stropem
