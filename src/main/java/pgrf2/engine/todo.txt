@@ -1,6 +1,4 @@
     //TODO: Přehrávání hudby
-    //TODO: Animace disku
-    //TODO: Animace knoflíků
     //TODO: vymodelování ramena s jehlou
     //TODO: animace ramena s jehlou
     //TODO: ovládání rychlosti přehrávání
@@ -12,4 +10,4 @@
     //TODO: vlastní obrázky k hudbě
     //TODO: Předělat GramophoneBody
     //TODO: Opravit normály GramophoneBody
-    //TODO: opravit skybox podlaha prohozená se stropem
+    //TODO: opravit skybox: podlaha prohozená se stropem, zlepšit přechody

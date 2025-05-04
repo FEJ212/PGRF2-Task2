@@ -4,6 +4,7 @@ import pgrf2.lwjglutils.OGLTextRenderer;
 import pgrf2.lwjglutils.OGLUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
+import pgrf2.models.gramophone.GramophoneScene;
 
 import java.nio.DoubleBuffer;
 
@@ -146,5 +147,9 @@ public abstract class AbstractRenderer {
 
     public void dispose() {
 
+    }
+
+    public GramophoneScene getGramophoneScene() {
+        return null;
     }
 }

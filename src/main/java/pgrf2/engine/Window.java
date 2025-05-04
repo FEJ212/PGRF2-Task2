@@ -1,11 +1,13 @@
 package pgrf2.engine;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLUtil;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
+import pgrf2.models.gramophone.GramophoneScene;
 
 import java.nio.IntBuffer;
 import java.nio.DoubleBuffer;
@@ -155,6 +157,7 @@ public class Window {
                 public void free() {
                     delegate.free();
                 }
+
             });
 
         // Get the thread stack and push a new frame
@@ -189,8 +192,8 @@ public class Window {
     }
 
     private void loop() {
-        // This line is critical for LWJGL's interoperation with GLFW        // creates the GLCapabilities instance and makes the OpenGL
-        // bindings available for use.
+        // This line is critical for LWJGL's interoperation with GLFW
+        // creates the GLCapabilities instance and makes the OpenGL bindings available for use.
         GL.createCapabilities();
 
         if (DEBUG)
@@ -198,9 +201,19 @@ public class Window {
 
         renderer.init();
 
+        // Nastavení KeyCallback
+        GramophoneScene gramophoneScene = renderer.getGramophoneScene();
+        if (gramophoneScene != null) {
+            GLFWKeyCallback keyCallback = new Controller(gramophoneScene);
+            glfwSetKeyCallback(window, keyCallback);
+        } else {
+            System.err.println("GramophoneScene is null. KeyCallback not set.");
+        }
+
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
+            glfwPollEvents();
             // Render the UI panel
             uiPanel.render();
 
@@ -208,12 +221,9 @@ public class Window {
             renderer.display();
 
             glfwSwapBuffers(window); // swap the color buffers
-
-            // Poll for window events. The key callback above will only be
-            // invoked during this call.
-            glfwPollEvents();
         }
     }
+
 
     private double glfwGetCursorPosX(long window) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
