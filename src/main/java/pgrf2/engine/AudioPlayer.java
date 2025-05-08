@@ -56,8 +56,7 @@ public class AudioPlayer {
 
 
     public void setPlaybackSpeed(float speed) {
-        // Změna rychlosti přehrávání není přímo podporována MP3SPI.
-        // Můžete zkusit manipulovat s audio daty nebo použít jinou knihovnu pro tuto funkci.
+        // Nepovedlo se mi zprovoznit
     }
 
     public void stopMusic() {
