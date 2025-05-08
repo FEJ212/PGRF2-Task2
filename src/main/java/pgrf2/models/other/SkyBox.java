@@ -12,41 +12,41 @@ public class SkyBox {
 
     public void render() {
         texture.bind();
-        float size = 50.0f; // Zvětšení skyboxu
+        float size = 50.0f;
 
         glBegin(GL_QUADS);
 
-        // Front face
+        // Přední strana
         glTexCoord2f(0.5f, 0.33f); glVertex3f(-size, -size, size);
         glTexCoord2f(0.25f, 0.33f); glVertex3f(size, -size, size);
         glTexCoord2f(0.25f, 0.66f); glVertex3f(size, size, size);
         glTexCoord2f(0.5f, 0.66f); glVertex3f(-size, size, size);
 
-        // Back face
+        // Zadní strana
         glTexCoord2f(1.0f, 0.33f); glVertex3f(-size, -size, -size);
         glTexCoord2f(0.75f, 0.33f); glVertex3f(size, -size, -size);
         glTexCoord2f(0.75f, 0.66f); glVertex3f(size, size, -size);
         glTexCoord2f(1.0f, 0.66f); glVertex3f(-size, size, -size);
 
-        // Top face
-        glTexCoord2f(0.5f, 0.0f); glVertex3f(-size, size, -size);
-        glTexCoord2f(0.25f, 0.0f); glVertex3f(size, size, -size);
-        glTexCoord2f(0.25f, 0.33f); glVertex3f(size, size, size);
-        glTexCoord2f(0.5f, 0.33f); glVertex3f(-size, size, size);
+        // Vrchní strana
+        glTexCoord2f(0.5f, 0.0f); glVertex3f(-size, -size, -size);
+        glTexCoord2f(0.25f, 0.0f); glVertex3f(size, -size, -size);
+        glTexCoord2f(0.25f, 0.33f); glVertex3f(size, -size, size);
+        glTexCoord2f(0.5f, 0.33f); glVertex3f(-size, -size, size);
 
-        // Bottom face
-        glTexCoord2f(0.5f, 0.66f); glVertex3f(-size, -size, -size);
-        glTexCoord2f(0.25f, 0.66f); glVertex3f(size, -size, -size);
-        glTexCoord2f(0.25f, 1.0f); glVertex3f(size, -size, size);
-        glTexCoord2f(0.5f, 1.0f); glVertex3f(-size, -size, size);
+        // Spodní strana
+        glTexCoord2f(0.5f, 0.66f); glVertex3f(-size, size, -size);
+        glTexCoord2f(0.25f, 0.66f); glVertex3f(size, size, -size);
+        glTexCoord2f(0.25f, 1.0f); glVertex3f(size, size, size);
+        glTexCoord2f(0.5f, 1.0f); glVertex3f(-size, size, size);
 
-        // Right face
+        // Pravá strana
         glTexCoord2f(0.75f, 0.33f); glVertex3f(size, -size, -size);
         glTexCoord2f(0.5f, 0.33f); glVertex3f(size, -size, size);
         glTexCoord2f(0.5f, 0.66f); glVertex3f(size, size, size);
         glTexCoord2f(0.75f, 0.66f); glVertex3f(size, size, -size);
 
-        // Left face
+        // Levá strana
         glTexCoord2f(0.25f, 0.33f); glVertex3f(-size, -size, -size);
         glTexCoord2f(0.0f, 0.33f); glVertex3f(-size, -size, size);
         glTexCoord2f(0.0f, 0.66f); glVertex3f(-size, size, size);

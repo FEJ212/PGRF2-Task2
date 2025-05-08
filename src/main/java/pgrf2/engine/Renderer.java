@@ -105,7 +105,7 @@ public class Renderer extends AbstractRenderer {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         audioPlayer = new AudioPlayer();
-        audioPlayer.playMusic("music/Ode_to_Joy.mp3");
+        audioPlayer.playMusic("music/SampleMusic.mp3");
         gramophoneScene = new GramophoneScene(new GramophoneBase(textureBase, textureDetail), new Disk(textureDisk), new Leg(textureLeg), new Knob(textureKnob, textureDetail), audioPlayer);
         skyBox = new SkyBox(textureSkyBox); // Vytvoření instance třídy SkyBox
         ambientLight = new AmbientLight(0.6f, 0.6f, 0.6f);
@@ -134,9 +134,5 @@ public class Renderer extends AbstractRenderer {
     @Override
     public GramophoneScene getGramophoneScene() {
         return gramophoneScene;
-    }
-
-    public AudioPlayer getAudioPlayer() {
-        return audioPlayer;
     }
 }

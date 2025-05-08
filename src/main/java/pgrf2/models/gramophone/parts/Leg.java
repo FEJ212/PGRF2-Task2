@@ -14,7 +14,7 @@ public class Leg {
         texture.bind();
         setMaterialRubber();
         drawLeg(0.05f, 0.0425f, 0.2f);
-        drawBottomCircle(0.0425f); // vykreslení spodku kruhu
+        drawBottomCircle(0.0425f);
     }
 
     private void setMaterialRubber() {
@@ -40,11 +40,11 @@ public class Leg {
             float xBottom = bottomRadius * (float) Math.cos(angle);
             float yBottom = bottomRadius * (float) Math.sin(angle);
             float texCoordX = (float) i / numSegments;
-            glNormal3f(xTop, yTop, 0); // Normála pro horní část
-            glTexCoord2f(texCoordX, 1.0f); // Souřadnice textury pro horní část
+            glNormal3f(xTop, yTop, 0);
+            glTexCoord2f(texCoordX, 1.0f);
             glVertex3f(xTop, yTop, height);
-            glNormal3f(xBottom, yBottom, 0); // Normála pro spodní část
-            glTexCoord2f(texCoordX, 0.0f); // Souřadnice textury pro spodní část
+            glNormal3f(xBottom, yBottom, 0);
+            glTexCoord2f(texCoordX, 0.0f);
             glVertex3f(xBottom, yBottom, 0.0f);
         }
         glEnd();
@@ -54,14 +54,14 @@ public class Leg {
         int numSegments = 100;
         float angleStep = (float) (2.0f * Math.PI / numSegments);
         glBegin(GL_TRIANGLE_FAN);
-        glNormal3f(0, 0, -1); // Normála pro spodní stranu
-        glTexCoord2f(0.5f, 0.5f); // Souřadnice textury pro střed kruhu
-        glVertex3f(0.0f, 0.0f, 0.0f); // střed kruhu
+        glNormal3f(0, 0, -1);
+        glTexCoord2f(0.5f, 0.5f);
+        glVertex3f(0.0f, 0.0f, 0.0f);
         for (int i = 0; i <= numSegments; ++i) {
             float angle = i * angleStep;
             float x = radius * (float) Math.cos(angle);
             float y = radius * (float) Math.sin(angle);
-            glTexCoord2f((x / radius + 1) / 2, (y / radius + 1) / 2); // Souřadnice textury pro okraj kruhu
+            glTexCoord2f((x / radius + 1) / 2, (y / radius + 1) / 2);
             glVertex3f(x, y, 0.0f);
         }
         glEnd();

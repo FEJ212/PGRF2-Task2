@@ -1,8 +1,0 @@
-//TODO: vymodelování ramena s jehlou
-//TODO: animace ramena s jehlou
-//TODO: UI
-//TODO: nápověda v UI
-//TODO: ovládání v UI
-//TODO: výběr hudby z nabídky
-//TODO: možnost nahrání vlastní hudby
-//TODO: opravit skybox: podlaha prohozená se stropem, zlepšit přechody

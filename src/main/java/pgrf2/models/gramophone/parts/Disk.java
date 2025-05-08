@@ -19,8 +19,8 @@ public class Disk {
     private void setMaterialVinyl() {
         float[] materialAmbient = {0.05f, 0.05f, 0.05f, 1.0f};
         float[] materialDiffuse = {0.1f, 0.1f, 0.1f, 1.0f};
-        float[] materialSpecular = {0.9f, 0.9f, 0.9f, 1.0f}; // Increased specular reflection
-        float materialShininess = 128.0f; // Higher shininess value for a more glossy effect
+        float[] materialSpecular = {0.9f, 0.9f, 0.9f, 1.0f};
+        float materialShininess = 128.0f;
 
         glMaterialfv(GL_FRONT, GL_AMBIENT, materialAmbient);
         glMaterialfv(GL_FRONT, GL_DIFFUSE, materialDiffuse);
@@ -39,7 +39,7 @@ public class Disk {
             float x = outerRadius * (float) Math.cos(angle);
             float y = outerRadius * (float) Math.sin(angle);
             glTexCoord2f((x + 1) / 2, (y + 1) / 2);
-            glNormal3f(0.0f, 0.0f, 1.0f); // Normála pro horní stranu disku
+            glNormal3f(0.0f, 0.0f, 1.0f);
             glVertex3f(x, y, zStart);
         }
         glEnd();

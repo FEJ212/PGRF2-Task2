@@ -37,9 +37,9 @@ public class GramophoneScene extends Scene {
         // Posun a vykreslení disku
         glPushMatrix();
         glScalef(1.5f, 1.5f, 1.5f);
-        glTranslatef(0.4f, 0.12f, 0.4f); // Posun disku na vrchní stranu gramofonu
-        glRotatef(90, 1, 0, 0); // Otočení disku pro správnou orientaci
-        if (speed>0.f&&speed<2.2f) {
+        glTranslatef(0.4f, 0.12f, 0.4f);
+        glRotatef(90, 1, 0, 0);
+        if (speed>0.f&&speed<2.1f) {
             glRotatef(diskAngle * speed * 1.5f, 0, 0, 1);
         }
         disk.render();

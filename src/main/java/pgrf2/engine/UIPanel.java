@@ -1,6 +1,5 @@
 package pgrf2.engine;
 
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
@@ -17,7 +16,7 @@ public class UIPanel {
     }
 
     public void init() {
-        // Initialize UI elements here
+        //Prostor pro initializi
     }
 
     public void render() {
@@ -25,7 +24,7 @@ public class UIPanel {
         GL11.glViewport(0, 0, width, height);
         GL11.glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-        // Render UI elements here
+        // Render elementů
     }
 
     public boolean isMouseOver(double xpos, double ypos) {

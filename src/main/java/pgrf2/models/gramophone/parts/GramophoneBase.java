@@ -4,7 +4,7 @@ import static org.lwjgl.opengl.GL33.*;
 import pgrf2.lwjglutils.OGLTexture2D;
 
 public class GramophoneBase {
-    private final OGLTexture2D mainTexture, detailTexture; // Textura dřeva na většinu báze
+    private final OGLTexture2D mainTexture, detailTexture;
 
     public GramophoneBase(OGLTexture2D mainTexture, OGLTexture2D detailTexture) {
         this.mainTexture = mainTexture;
@@ -16,10 +16,10 @@ public class GramophoneBase {
     }
 
     private void setMaterialWood() {
-        float[] materialAmbient = {0.3f, 0.2f, 0.1f, 1.0f}; // Vyšší ambientní složka
-        float[] materialDiffuse = {0.7f, 0.5f, 0.3f, 1.0f}; // Vyšší difuzní složka
-        float[] materialSpecular = {0.4f, 0.4f, 0.4f, 1.0f}; // Vyšší speculární složka pro lesklý vzhled
-        float materialShininess = 50.0f; // Vyšší lesk
+        float[] materialAmbient = {0.3f, 0.2f, 0.1f, 1.0f};
+        float[] materialDiffuse = {0.7f, 0.5f, 0.3f, 1.0f};
+        float[] materialSpecular = {0.4f, 0.4f, 0.4f, 1.0f};
+        float materialShininess = 50.0f;
 
         glMaterialfv(GL_FRONT, GL_AMBIENT, materialAmbient);
         glMaterialfv(GL_FRONT, GL_DIFFUSE, materialDiffuse);
@@ -28,10 +28,10 @@ public class GramophoneBase {
     }
 
     private void setMaterialMetal() {
-        float[] materialAmbient = {0.3f, 0.3f, 0.3f, 1.0f}; // Vyšší ambientní složka
-        float[] materialDiffuse = {0.6f, 0.6f, 0.6f, 1.0f}; // Vyšší difuzní složka
-        float[] materialSpecular = {1.0f, 1.0f, 1.0f, 1.0f}; // Vysoká speculární složka pro lesklý vzhled
-        float materialShininess = 100.0f; // Vysoký lesk
+        float[] materialAmbient = {0.3f, 0.3f, 0.3f, 1.0f};
+        float[] materialDiffuse = {0.6f, 0.6f, 0.6f, 1.0f};
+        float[] materialSpecular = {1.0f, 1.0f, 1.0f, 1.0f};
+        float materialShininess = 100.0f;
 
         glMaterialfv(GL_FRONT, GL_AMBIENT, materialAmbient);
         glMaterialfv(GL_FRONT, GL_DIFFUSE, materialDiffuse);
