@@ -1,8 +1,9 @@
 package pgrf2.engine;
 
 import javax.sound.sampled.*;
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
 
 public class AudioPlayer {
     private Clip clip;
@@ -12,13 +13,21 @@ public class AudioPlayer {
     }
 
     public void playMusic(String filePath) {
+        clip = loadMusic(filePath);
+        if (clip != null) {
+            clip.start();
+        }
+    }
+
+    public Clip loadMusic(String filePath) {
+        Clip clip = null;
         try {
-            URL url = getClass().getClassLoader().getResource(filePath);
-            if (url == null) {
-                throw new RuntimeException("Audio file not found: " + filePath);
+            InputStream musicStream = getClass().getClassLoader().getResourceAsStream(filePath);
+            if (musicStream == null) {
+                throw new IOException("File not found: " + filePath);
             }
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(url);
-            AudioFormat baseFormat = audioInputStream.getFormat();
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(new BufferedInputStream(musicStream));
+            AudioFormat baseFormat = audioStream.getFormat();
             AudioFormat decodedFormat = new AudioFormat(
                     AudioFormat.Encoding.PCM_SIGNED,
                     baseFormat.getSampleRate(),
@@ -28,22 +37,23 @@ public class AudioPlayer {
                     baseFormat.getSampleRate(),
                     false
             );
-            AudioInputStream decodedAudioInputStream = AudioSystem.getAudioInputStream(decodedFormat, audioInputStream);
-            DataLine.Info info = new DataLine.Info(Clip.class, decodedFormat);
-            clip = (Clip) AudioSystem.getLine(info);
-            clip.open(decodedAudioInputStream);
+            AudioInputStream decodedAudioStream = AudioSystem.getAudioInputStream(decodedFormat, audioStream);
+            clip = AudioSystem.getClip();
+            clip.open(decodedAudioStream);
             volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            clip.start();
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
+        return clip;
     }
 
     public void setVolume(float volume) {
         if (volumeControl != null) {
-            volumeControl.setValue(20f * (float) Math.log10(volume));
+            float dB = (float) (Math.log10(volume) * 20);
+            volumeControl.setValue(dB);
         }
     }
+
 
     public void setPlaybackSpeed(float speed) {
         // Změna rychlosti přehrávání není přímo podporována MP3SPI.
@@ -53,12 +63,6 @@ public class AudioPlayer {
     public void stopMusic() {
         if (clip != null) {
             clip.stop();
-        }
-    }
-
-    public void cleanup() {
-        if (clip != null) {
-            clip.close();
         }
     }
 }

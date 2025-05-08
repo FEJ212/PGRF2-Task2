@@ -5,7 +5,5 @@
     //TODO: nápověda v UI
     //TODO: výběr hudby z nabídky
     //TODO: nahrání vlastní hudby
-    //TODO: vlastní obrázky k hudbě
-    //TODO: Předělat GramophoneBody
     //TODO: Opravit normály GramophoneBody
     //TODO: opravit skybox: podlaha prohozená se stropem, zlepšit přechody

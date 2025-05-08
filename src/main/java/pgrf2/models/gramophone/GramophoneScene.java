@@ -132,4 +132,8 @@ public class GramophoneScene extends Scene {
         }
         System.out.println("Key pressed in GramophoneScene: " + key);
     }
+
+    public void setAudioPlayer(AudioPlayer audioPlayer) {
+        this.audioPlayer = audioPlayer;
+    }
 }
