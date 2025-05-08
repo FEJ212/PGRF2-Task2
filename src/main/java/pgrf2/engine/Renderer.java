@@ -1,6 +1,5 @@
 package pgrf2.engine;
 
-import org.lwjgl.openal.AL10;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
@@ -13,20 +12,6 @@ import pgrf2.models.gramophone.parts.Leg;
 import pgrf2.models.gramophone.GramophoneScene;
 import pgrf2.models.other.SkyBox;
 import pgrf2.transforms.Vec3D;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.File;
-import java.nio.ByteOrder;
-import org.lwjgl.openal.AL;
-import org.lwjgl.openal.ALC;
-import org.lwjgl.openal.ALC10;
-import org.lwjgl.system.MemoryStack;
-
-import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -90,13 +75,10 @@ public class Renderer extends AbstractRenderer {
     @Override
     public void init() {
         super.init();
-        initOpenAL();
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
         camera = new Camera();
         camera.setCentre(new Vec3D(0, 0.5, 0.5));
         camera.setRadius(5.0);
-
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_TEXTURE_2D);
         glDisable(GL_CULL_FACE);
@@ -109,7 +91,6 @@ public class Renderer extends AbstractRenderer {
         glColor3f(1.0f, 1.0f, 1.0f);
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-
         try {
             textureBase = new OGLTexture2D("textures/4K-anzem_basecolor.png");
             textureDisk = new OGLTexture2D("textures/vinyl_gpt.png");
@@ -120,19 +101,18 @@ public class Renderer extends AbstractRenderer {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-
         gramophoneScene = new GramophoneScene(new GramophoneBase(textureBase, textureDetail), new Disk(textureDisk), new Leg(textureLeg), new Knob(textureKnob, textureDetail), audioPlayer);
         skyBox = new SkyBox(textureSkyBox); // Vytvoření instance třídy SkyBox
         ambientLight = new AmbientLight(0.6f, 0.6f, 0.6f);
         directionalLight = new DirectionalLight(new Vec3D(0, 0, -1), 1.0f, 1.0f, 1.0f);
-
         audioPlayer = new AudioPlayer();
-        int buffer = loadSound("src/main/resources/music/Ode_to_Joy.wav");
-        audioPlayer.playMusic(buffer);
+        audioPlayer.playMusic("src/main/resources/music/Ode_to_Joy.mp3");
+
+
     }
+
 
     @Override
     public void display() {
@@ -159,63 +139,5 @@ public class Renderer extends AbstractRenderer {
 
     public AudioPlayer getAudioPlayer() {
         return audioPlayer;
-    }
-
-    private void initOpenAL() {
-        long device = ALC10.alcOpenDevice((ByteBuffer) null);
-        if (device == 0) {
-            throw new IllegalStateException("Failed to open the default OpenAL device.");
-        }
-
-        MemoryStack stack = MemoryStack.stackPush();
-        IntBuffer attribs = stack.mallocInt(1);
-        attribs.put(0).flip();
-        long context = ALC10.alcCreateContext(device, attribs);
-        if (context == 0) {
-            throw new IllegalStateException("Failed to create OpenAL context.");
-        }
-
-        ALC10.alcMakeContextCurrent(context);
-        AL.createCapabilities(ALC.createCapabilities(device));
-        }
-
-        // Vaše další metody, včetně loadSound
-        private int loadSound(String filePath) {
-        int buffer = AL10.alGenBuffers();
-        try {
-            File file = new File(filePath);
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
-            AudioFormat format = audioInputStream.getFormat();
-            int formatOpenAL = getOpenALFormat(format);
-
-            byte[] audioData = audioInputStream.readAllBytes();
-            ByteBuffer bufferData = ByteBuffer.allocateDirect(audioData.length).order(ByteOrder.nativeOrder());
-            bufferData.put(audioData);
-            bufferData.flip();
-
-            AL10.alBufferData(buffer, formatOpenAL, bufferData, (int) format.getSampleRate());
-        } catch (UnsupportedAudioFileException | IOException e) {
-            e.printStackTrace();
-        }
-        return buffer;
-    }
-
-    private int getOpenALFormat(AudioFormat format) {
-        int channels = format.getChannels();
-        int sampleSizeInBits = format.getSampleSizeInBits();
-        if (channels == 1) {
-            if (sampleSizeInBits == 8) {
-                return AL10.AL_FORMAT_MONO8;
-            } else if (sampleSizeInBits == 16) {
-                return AL10.AL_FORMAT_MONO16;
-            }
-        } else if (channels == 2) {
-            if (sampleSizeInBits == 8) {
-                return AL10.AL_FORMAT_STEREO8;
-            } else if (sampleSizeInBits == 16) {
-                return AL10.AL_FORMAT_STEREO16;
-            }
-        }
-        throw new IllegalArgumentException("Unsupported audio format: " + format);
     }
 }

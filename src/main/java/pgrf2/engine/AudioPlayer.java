@@ -1,61 +1,64 @@
 package pgrf2.engine;
 
-import org.lwjgl.openal.AL;
-import org.lwjgl.openal.AL10;
-import org.lwjgl.openal.ALC;
-import org.lwjgl.openal.ALC10;
-import org.lwjgl.openal.ALCCapabilities;
-
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
+import javax.sound.sampled.*;
+import java.io.IOException;
+import java.net.URL;
 
 public class AudioPlayer {
-    private Long device;
-    private Long context;
-    private int source;
+    private Clip clip;
+    private FloatControl volumeControl;
 
     public AudioPlayer() {
-        // Otevření výchozího zařízení
-        device = ALC10.alcOpenDevice((ByteBuffer) null);
-        if (device == null) {
-            throw new IllegalStateException("Failed to open the default OpenAL device.");
-        }
-
-        // Vytvoření kontextu
-        ALCCapabilities deviceCapabilities = ALC.createCapabilities(device);
-        context = ALC10.alcCreateContext(device, (IntBuffer) null);
-        if (context == null) {
-            throw new IllegalStateException("Failed to create OpenAL context.");
-        }
-
-        // Nastavení kontextu jako aktuálního
-        ALC10.alcMakeContextCurrent(context);
-        AL.createCapabilities(deviceCapabilities);
-
-        // Vytvoření zdroje zvuku
-        source = AL10.alGenSources();
     }
 
-    public void playMusic(int buffer) {
-        AL10.alSourcei(source, AL10.AL_BUFFER, buffer);
-        AL10.alSourcePlay(source);
+    public void playMusic(String filePath) {
+        try {
+            URL url = getClass().getClassLoader().getResource(filePath);
+            if (url == null) {
+                throw new RuntimeException("Audio file not found: " + filePath);
+            }
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(url);
+            AudioFormat baseFormat = audioInputStream.getFormat();
+            AudioFormat decodedFormat = new AudioFormat(
+                    AudioFormat.Encoding.PCM_SIGNED,
+                    baseFormat.getSampleRate(),
+                    16,
+                    baseFormat.getChannels(),
+                    baseFormat.getChannels() * 2,
+                    baseFormat.getSampleRate(),
+                    false
+            );
+            AudioInputStream decodedAudioInputStream = AudioSystem.getAudioInputStream(decodedFormat, audioInputStream);
+            DataLine.Info info = new DataLine.Info(Clip.class, decodedFormat);
+            clip = (Clip) AudioSystem.getLine(info);
+            clip.open(decodedAudioInputStream);
+            volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            clip.start();
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setVolume(float volume) {
-        AL10.alSourcef(source, AL10.AL_GAIN, volume);
+        if (volumeControl != null) {
+            volumeControl.setValue(20f * (float) Math.log10(volume));
+        }
     }
 
     public void setPlaybackSpeed(float speed) {
-        AL10.alSourcef(source, AL10.AL_PITCH, speed);
+        // Změna rychlosti přehrávání není přímo podporována MP3SPI.
+        // Můžete zkusit manipulovat s audio daty nebo použít jinou knihovnu pro tuto funkci.
     }
 
     public void stopMusic() {
-        AL10.alSourceStop(source);
+        if (clip != null) {
+            clip.stop();
+        }
     }
 
     public void cleanup() {
-        AL10.alDeleteSources(source);
-        ALC10.alcDestroyContext(context);
-        ALC10.alcCloseDevice(device);
+        if (clip != null) {
+            clip.close();
+        }
     }
 }

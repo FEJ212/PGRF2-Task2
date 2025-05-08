@@ -1,8 +1,6 @@
     //TODO: Přehrávání hudby
     //TODO: vymodelování ramena s jehlou
     //TODO: animace ramena s jehlou
-    //TODO: ovládání rychlosti přehrávání
-    //TODO: ovládání hlasitosti
     //TODO: UI
     //TODO: nápověda v UI
     //TODO: výběr hudby z nabídky
